@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>五子棋</title>
+    <style>
+        td, .black, .white{
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+        }
+        td{
+            border: 1px solid black;
+            background-color: khaki;
+        }
+        body{
+            text-align: center;
+        }
+        body table{
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        .black{
+            background: #000000;
+            border-radius: 50%;
+        }
+        .white{
+            background: #f9fafa;
+            border-radius: 50%;
+        }
+        button{
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<button>重新游戏</button>
+<p>黑棋得分：<span>0</span>&nbsp;&nbsp;&nbsp;&nbsp;白棋得分：<span>0</span></p>
+</body>
+<script src="jquery-3.4.1.js"></script>
+<script>
+    $(function () {
+        alert("黑棋先走。");
+        let black = "black";
+        let white = "white";
+        let whose_round = true;
+        function who_win(which_color) {//判断谁得分
+            let color = which_color;
+            let which = color == black ? 0 : 1;
+            let number = $("span:eq("+which+")");
+            number.text(parseInt(number.text())+1);
+            alert(color+"赢了！！");
+        }
+        function checkRow(color, column01, row01){
+            let column = column01;
+            let row = row01;
+            let count = 1;//计算连续出现同色棋次数
+            while(true){
+                //判断前面连续同色棋数
+                let td = $("tr").eq(row).children().eq(--column);//遍历前面单元格，--在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                    if (count>=5){
+                        break;
+                    }
+                }else{
+                    break;
+                }
+            }
+            column = column01;/*恢复当前单元格的位置*/
+            while(true){
+                if (count>=5){
+                    who_win(color);
+                    break;
+                }
+                //判断后面连续同色棋数
+                let td = $("tr").eq(row).children().eq(++column);//遍历前面单元格,++在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                }else{
+                    break;
+                }
+            }
+        }
+        function checkColumn(color, column01, row01){
+            let column = column01;
+            let row = row01;
+            let count = 1;//计算连续出现同色棋次数
+            while(true){
+                //判断前面连续同色棋数
+                let td = $("tr").eq(--row).children().eq(column);//遍历上面单元格，--在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                    if (count>=5){
+                        break;
+                    }
+                }else{
+                    break;
+                }
+            }
+            row = row01;/*恢复当前单元格的位置*/
+            while(true){
+                if (count>=5){
+                    who_win(color);
+                    break;
+                }
+                //判断后面连续同色棋数
+                let td = $("tr").eq(++row).children().eq(column);//遍历下面单元格,++在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                }else{
+                    break;
+                }
+            }
+        }
+        function check_upleft_to_downright(color, column01, row01){
+            let column = column01;
+            let row = row01;
+            let count = 1;//计算连续出现同色棋次数
+            while(true){
+                //判断前面连续同色棋数
+                let td = $("tr").eq(--row).children().eq(--column);//遍历左上单元格，--在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                    if (count>=5){
+                        break;
+                    }
+                }else{
+                    break;
+                }
+            }
+            column = column01;
+            row = row01;/*恢复当前单元格的位置*/
+            while(true){
+                if (count>=5){
+                    who_win(color);
+                    break;
+                }
+                //判断后面连续同色棋数
+                let td = $("tr").eq(++row).children().eq(++column);//遍历右下单元格,++在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                }else{
+                    break;
+                }
+            }
+        }
+        function check_downleft_to_upright(color, column01, row01){
+            let column = column01;
+            let row = row01;
+            let count = 1;//计算连续出现同色棋次数
+            while(true){
+                let td = $("tr").eq(--row).children().eq(++column);//遍历左下单元格，--在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                    if (count>=5){
+                        break;
+                    }
+                }else{
+                    break;
+                }
+            }
+            column = column01;
+            row = row01;/*恢复当前单元格的位置*/
+            while(true){
+                if (count>=5){
+                    who_win(color);
+                    break;
+                }
+                //判断后面连续同色棋数
+                let td = $("tr").eq(++row).children().eq(--column);//遍历右上单元格,++在前后不一样
+                let chess_color = td.children().attr("class");//获取棋子颜色
+                if(color==chess_color){
+                    count++;
+                }else{
+                    break;
+                }
+            }
+        }
+        document.oncontextmenu=function(){//取消默认右键事件。
+            return false;
+        };
+        /*棋盘*/
+        let table = "<table>";
+        for (let i1 = 0; i1 < 20; i1++){
+            table += "<tr>";
+            for (let i2 = 0; i2 < 20; i2++){
+                table += "<td></td>";
+            }
+            table += "</tr>";
+        }
+        table += "</table>";
+        $("body").append($(table));
+
+        /*左右键黑白棋*/
+        $("td").on("mousedown", function (event) {
+            if (event.which==1){
+                if (whose_round) {
+                    if ($(this).find("div").attr("class") == white) {
+                        alert("不能够顶替别人的棋子");
+                    } else {
+                        $(this).empty().append("<div class='black'></div>");
+                        let column = $(this).index();//获取列序号
+                        let row = $(this).parent().index();//获取行序号
+                        checkRow(black, column, row);
+                        checkColumn(black, column, row);
+                        check_upleft_to_downright(black, column, row);
+                        check_downleft_to_upright(black, column, row);//判断各个方向是否存在五个连续黑棋
+                    }
+                    whose_round = false;
+                }else{
+                    alert("还没有轮到黑棋呢。");
+                }
+            }else if (event.which==3) {
+                if (!whose_round) {
+                    if ($(this).find("div").attr("class") == black) {//如果颜色不同，则不放置棋子
+                        alert("不能够顶替别人的棋子");
+                    } else {
+                        $(this).empty().append("<div class='white'></div>");
+                        let column = $(this).index();
+                        let row = $(this).parent().index();
+                        checkRow(white, column, row);
+                        checkColumn(white, column, row);
+                        check_upleft_to_downright(white, column, row);
+                        check_downleft_to_upright(white, column, row);
+                    }
+                    whose_round = true;
+                } else{
+                    alert("还没有轮到白棋呢。");
+                }
+            }
+        });
+
+        /*重新游戏*/
+        $("button").on("click", function () {
+           $("td").empty();
+            whose_round = true;
+        });
+    });
+</script>
+</html>
